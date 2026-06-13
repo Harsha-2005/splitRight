@@ -1,0 +1,13 @@
+{
+  "name": "splitright-monorepo",
+  "version": "1.0.0",
+  "description": "SplitRight - Shared expense tracker (monorepo root)",
+  "scripts": {
+    "start": "cd backend && node src/index.js",
+    "build": "cd backend && npm install && npx prisma generate",
+    "install-backend": "cd backend && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
