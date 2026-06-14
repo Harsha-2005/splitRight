@@ -16,8 +16,25 @@ dotenv.config();
 
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  // Strip any trailing slash from FRONTEND_URL, then allow both variants
+  ...(process.env.FRONTEND_URL
+    ? [
+        process.env.FRONTEND_URL.replace(/\/$/, ''),
+        process.env.FRONTEND_URL.replace(/\/$/, '') + '/',
+      ]
+    : []),
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. mobile apps, curl, same-origin)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS: origin "${origin}" not allowed`));
+  },
   credentials: true,
 }));
 app.use(express.json());
